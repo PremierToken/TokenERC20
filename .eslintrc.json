@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "prettier-standard/prettier-file",
+    "eslint:recommended",
+    "plugin:import/recommended"
+  ],
+  "plugins": ["import", "truffle"],
+  "env": {
+    "es6": true,
+    "node": true,
+    "mocha": true,
+    "truffle/globals": true
+  }
+}
