@@ -1,6 +1,3 @@
 pragma solidity ^0.5.12;
 
-contract PremierToken {
-
-}
-
+contract PremierToken {}

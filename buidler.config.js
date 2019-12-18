@@ -43,6 +43,10 @@ const config = {
     url: 'https://api-rinkeby.etherscan.io/api',
     apiKey: ETHERSCAN_API_KEY,
   },
+  typechain: {
+    outDir: 'types',
+    target: 'ethers',
+  },
 };
 
 module.exports = config;

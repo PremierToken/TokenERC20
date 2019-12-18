@@ -7,12 +7,19 @@
   "author": "4cadia Factory <factory@4cadia.com>",
   "license": "CC-BY-ND-4.0",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "build": "buidler compile",
+    "postbuild": "buidler typechain",
+    "deploy": "buidler deploy/",
+    "lint": "solhint contracts/",
+    "test": "buidler test"
+  },
   "dependencies": {},
   "devDependencies": {
     "@nomiclabs/buidler": "^1.0.1",
     "@nomiclabs/buidler-ethers": "^1.0.1",
     "@nomiclabs/buidler-solhint": "^1.0.1",
+    "bignumber.js": "^9.0.0",
     "buidler-typechain": "^0.0.5",
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
