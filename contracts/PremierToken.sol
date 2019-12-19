@@ -5,8 +5,9 @@ import "./access/roles/AdminRole.sol";
 import "./access/roles/MinterRole.sol";
 import "./access/roles/BurnerRole.sol";
 import "./math/SafeMath.sol";
+import "./lifecycle/Pausable.sol";
 
-contract PremierToken is Ownable, AdminRole, MinterRole, BurnerRole {
+contract PremierToken is Ownable, Pausable, AdminRole, MinterRole, BurnerRole {
   using SafeMath for uint256;
 
   string private _name;
@@ -43,6 +44,15 @@ contract PremierToken is Ownable, AdminRole, MinterRole, BurnerRole {
 
   function balanceOf(address account) public view returns (uint256) {
     return _balances[account];
+  }
+
+  function transfer(address _to, uint256 _value) public whenNotPaused returns (bool) {
+    require(_to != address(0), "PremierToken: sending to the zero address");
+    require(_value <= balances[msg.sender], "PremierToken: seding more than balance");
+    balances[msg.sender] = balances[msg.sender].sub(_value);
+    balances[_to] = balances[_to].add(_value);
+    emit Transfer(msg.sender, _to, _value);
+    return true;
   }
 
   function mintTo(address account, uint256 amount) public onlyMinter {
