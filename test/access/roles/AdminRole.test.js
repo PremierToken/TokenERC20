@@ -1,11 +1,11 @@
-const { ethers } = require('@nomiclabs/buidler');
-const { deployContract, getWallets, solidity } = require('ethereum-waffle');
+const {ethers} = require('@nomiclabs/buidler');
+const {deployContract, getWallets, solidity} = require('ethereum-waffle');
 const chai = require('chai');
 const AdminRoleArtifact = require('../../../artifacts/AdminRoleMock.json');
 
 chai.use(solidity);
 
-const { expect } = chai;
+const {expect} = chai;
 
 async function createAdminRole(wallet) {
   return deployContract(wallet, AdminRoleArtifact, []);

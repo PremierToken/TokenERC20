@@ -1,11 +1,11 @@
-const { ethers } = require('@nomiclabs/buidler');
-const { deployContract, getWallets, solidity } = require('ethereum-waffle');
+const {ethers} = require('@nomiclabs/buidler');
+const {deployContract, getWallets, solidity} = require('ethereum-waffle');
 const chai = require('chai');
 const MinterRoleArtifact = require('../../../artifacts/MinterRoleMock.json');
 
 chai.use(solidity);
 
-const { expect } = chai;
+const {expect} = chai;
 
 async function createMinterRole(wallet) {
   return deployContract(wallet, MinterRoleArtifact, []);
