@@ -1,6 +1,6 @@
 pragma solidity ^0.5.12;
 
-import "./access/roles/AdminRole.sol";
+import "../access/roles/AdminRole.sol";
 
 /**
  * @dev Contract module which allows children to implement an emergency stop
@@ -29,7 +29,7 @@ contract Pausable is AdminRole {
      * to the deployer.
      */
   constructor () internal {
-    paused = true;
+    _paused = true;
   }
 
     /**
@@ -60,7 +60,7 @@ contract Pausable is AdminRole {
      */
   function pause() public onlyAdmin whenNotPaused {
     _paused = true;
-    emit Paused(_msgSender());
+    emit Paused(msg.sender);
   }
 
     /**
@@ -68,6 +68,6 @@ contract Pausable is AdminRole {
      */
   function unpause() public onlyAdmin whenPaused {
     _paused = false;
-    emit Unpaused(_msgSender());
+    emit Unpaused(msg.sender);
   }
 }
