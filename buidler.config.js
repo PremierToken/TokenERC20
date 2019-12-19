@@ -1,7 +1,7 @@
 require('dotenv-safe/config');
 const process = require('process');
-const { usePlugin } = require('@nomiclabs/buidler/config');
-const { defaultAccounts } = require('ethereum-waffle');
+const {usePlugin} = require('@nomiclabs/buidler/config');
+const {defaultAccounts} = require('ethereum-waffle');
 
 const {
   INFURA_API_KEY = '',
@@ -10,7 +10,6 @@ const {
 } = process.env;
 
 usePlugin('buidler-typechain');
-usePlugin('@nomiclabs/buidler-solhint');
 
 require('./tasks/accounts');
 require('./tasks/deploy');
