@@ -59,7 +59,10 @@ contract PremierToken is Ownable, AdminRole, MinterRole, BurnerRole {
       account != address(0),
       "PremierToken: burning from the zero address"
     );
-
+    require(
+      _balances[account] >= amount,
+      "PremierToken: burning more than available"
+    );
     _balances[account] = _balances[account].sub(amount);
     _totalSupply = _totalSupply.sub(amount);
 
