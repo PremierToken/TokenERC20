@@ -1,8 +1,9 @@
 pragma solidity ^0.5.12;
 
-import ".../Roles.sol";
+import "../Roles.sol";
+import "./AdminRole.sol";
 
-contract MinterRole {
+contract MinterRole is AdminRole {
   using Roles for Roles.Role;
 
   event MinterAdded(address indexed account);
@@ -11,31 +12,30 @@ contract MinterRole {
   Roles.Role private _minters;
 
   constructor() internal {
-    _addMinter(msg.sender);
+    _internalAddMinter(msg.sender);
   }
 
   modifier onlyMinter() {
-    require(isMinter(msg.sender), "MinterRole: caller does not have the Minter role");
+    require(
+      isMinter(msg.sender),
+      "MinterRole: caller does not have the Minter role"
+    );
     _;
   }
 
-  function isMinter(address account) public view
-    returns (bool)
-  {
+  function isMinter(address account) public view returns (bool) {
     return _minters.has(account);
   }
 
-  function addMinter(address account) public onlyMinter {
-    _internalAddMinter(account);
-  }
-
-  function minters() public view
-    returns (address[])
-  {
+  function minters() public view returns (address[] memory) {
     return _minters.bearers();
   }
 
-  function removeMinter(address account) public onlyMinter {
+  function addMinter(address account) public onlyAdmin {
+    _internalAddMinter(account);
+  }
+
+  function removeMinter(address account) public onlyAdmin {
     _internalRemoveMinter(account);
   }
 
