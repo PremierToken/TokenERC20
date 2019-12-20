@@ -45,10 +45,7 @@ contract AdminRole is Ownable {
   }
 
   function _internalRemoveAdmin(address account) internal {
-    require(
-      account != msg.sender,
-      "AdminRole: caller can not renounce itself"
-    );
+    require(account != msg.sender, "AdminRole: caller can not renounce itself");
     _admins.remove(account);
     emit AdminRemoved(account);
   }

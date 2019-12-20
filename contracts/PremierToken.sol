@@ -48,9 +48,16 @@ contract PremierToken is Ownable, Pausable, AdminRole, MinterRole, BurnerRole {
     return _balances[account];
   }
 
-  function transfer(address _to, uint256 _value) public whenNotPaused returns (bool) {
+  function transfer(address _to, uint256 _value)
+    public
+    whenNotPaused
+    returns (bool)
+  {
     require(_to != address(0), "PremierToken: sending to the zero address");
-    require(_value <= _balances[msg.sender], "PremierToken: seding more than balance");
+    require(
+      _value <= _balances[msg.sender],
+      "PremierToken: seding more than balance"
+    );
     _balances[msg.sender] = _balances[msg.sender].sub(_value);
     _balances[_to] = _balances[_to].add(_value);
     emit Transfer(msg.sender, _to, _value);

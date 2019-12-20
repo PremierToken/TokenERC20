@@ -12,34 +12,34 @@ import "../access/roles/AdminRole.sol";
  * simply including this module, only once the modifiers are put in place.
  */
 contract Pausable is AdminRole {
-    /**
+  /**
      * @dev Emitted when the pause is triggered by a pauser (`account`).
      */
   event Paused(address account);
 
-    /**
+  /**
      * @dev Emitted when the pause is lifted by a pauser (`account`).
      */
   event Unpaused(address account);
 
   bool private _paused;
 
-    /**
+  /**
      * @dev Initializes the contract in unpaused state. Assigns the Pauser role
      * to the deployer.
      */
-  constructor () internal {
+  constructor() internal {
     _paused = true;
   }
 
-    /**
+  /**
      * @dev Returns true if the contract is paused, and false otherwise.
      */
   function paused() public view returns (bool) {
     return _paused;
   }
 
-    /**
+  /**
      * @dev Modifier to make a function callable only when the contract is not paused.
      */
   modifier whenNotPaused() {
@@ -47,7 +47,7 @@ contract Pausable is AdminRole {
     _;
   }
 
-    /**
+  /**
      * @dev Modifier to make a function callable only when the contract is paused.
      */
   modifier whenPaused() {
@@ -55,7 +55,7 @@ contract Pausable is AdminRole {
     _;
   }
 
-    /**
+  /**
      * @dev Called by a pauser to pause, triggers stopped state.
      */
   function pause() public onlyAdmin whenNotPaused {
@@ -63,7 +63,7 @@ contract Pausable is AdminRole {
     emit Paused(msg.sender);
   }
 
-    /**
+  /**
      * @dev Called by a pauser to unpause, returns to normal state.
      */
   function unpause() public onlyAdmin whenPaused {
