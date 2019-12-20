@@ -1,4 +1,4 @@
-const { task, usePlugin } = require('@nomiclabs/buidler/config');
+const {task, usePlugin} = require('@nomiclabs/buidler/config');
 
 usePlugin('@nomiclabs/buidler-ethers');
 
@@ -6,12 +6,12 @@ task(
   'deploy',
   'Deploy a contract',
   async (
-    { contractName, force, constructorArgs, silent },
-    { run, config, ethers }
+    {contractName, force, constructorArgs, silent},
+    {run, config, ethers}
   ) => {
     const factory = await ethers.getContract(contractName);
 
-    await run('compile', { force });
+    await run('compile', {force});
 
     if (!silent) {
       console.log(`\nDeploying contract ${contractName}... Please wait.`);

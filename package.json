@@ -10,7 +10,7 @@
   "scripts": {
     "build": "buidler compile",
     "postbuild": "buidler typechain",
-    "deploy": "buidler deploy/",
+    "deploy": "buidler deploy",
     "lint": "solhint contracts/",
     "test": "buidler test"
   },
