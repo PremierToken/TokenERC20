@@ -7,7 +7,7 @@ import "./access/roles/BurnerRole.sol";
 import "./math/SafeMath.sol";
 import "./lifecycle/Pausable.sol";
 
-contract PremierToken is Ownable, Pausable, AdminRole, MinterRole, BurnerRole {
+contract PremierToken is Ownable, Pausable, MinterRole, BurnerRole {
   using SafeMath for uint256;
 
   string private _name;
@@ -24,6 +24,8 @@ contract PremierToken is Ownable, Pausable, AdminRole, MinterRole, BurnerRole {
     _name = name;
     _symbol = symbol;
     _decimals = decimals;
+
+    pause();
   }
 
   function name() public view returns (string memory) {

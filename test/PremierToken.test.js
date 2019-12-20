@@ -16,15 +16,46 @@ async function createContract(
 
 describe('Premier Token', () => {
   const provider = ethers.provider;
-  const [owner, admin, minter, burner, client] = getWallets(provider);
+  const [owner, admin, minter, burner, client1, client2] = getWallets(provider);
+
+  describe('Constructor', () => {
+    it('should deploy the contract in the paused state', async () => {
+      const contract = await createContract(owner);
+
+      const result = await contract.paused();
+
+      expect(result).to.equal(true);
+    });
+  });
+
+  describe('Admin permissions', () => {
+    it('should allow an admin to make another account an admin', async () => {
+      const contract = await createContract(owner);
+      await contract.addAdmin(admin.address);
+
+      const contractAsAdmin = contract.connect(admin);
+
+      await expect(contractAsAdmin.addAdmin(minter.address)).to.not.reverted;
+    });
+
+    it('should allow an admin to remove admin privileges from another account', async () => {
+      const contract = await createContract(owner);
+      await contract.addAdmin(admin.address);
+      await contract.addAdmin(minter.address);
+
+      const contractAsAdmin = contract.connect(admin);
+
+      await expect(contractAsAdmin.removeAdmin(minter.address)).to.not.reverted;
+    });
+  });
 
   describe('Mint', () => {
     it('should allow owner to mint to client address', async () => {
       const PremierToken = await createContract(owner);
 
-      await PremierToken.mintTo(client.address, 1000);
+      await PremierToken.mintTo(client1.address, 1000);
 
-      const clientBalance = await PremierToken.balanceOf(client.address);
+      const clientBalance = await PremierToken.balanceOf(client1.address);
       const totalSupply = await PremierToken.totalSupply();
 
       expect(clientBalance).to.equal(1000);
@@ -37,9 +68,9 @@ describe('Premier Token', () => {
 
       const contractAsMinter = contractAsOwner.connect(minter);
 
-      await contractAsMinter.mintTo(client.address, 1000);
+      await contractAsMinter.mintTo(client1.address, 1000);
 
-      const clientBalance = await contractAsMinter.balanceOf(client.address);
+      const clientBalance = await contractAsMinter.balanceOf(client1.address);
       const totalSupply = await contractAsMinter.totalSupply();
 
       expect(clientBalance).to.equal(1000);
@@ -48,33 +79,46 @@ describe('Premier Token', () => {
   });
 
   describe('Burn', () => {
-    it('should allow owner to burn to client address', async () => {
+    it('should allow owner to burn from client address', async () => {
       const PremierToken = await createContract(owner);
-      await PremierToken.mintTo(client.address, 1000);
-      await PremierToken.burnFrom(client.address, 800);
+      await PremierToken.mintTo(client1.address, 1000);
+      await PremierToken.burnFrom(client1.address, 800);
 
-      const clientBalance = await PremierToken.balanceOf(client.address);
+      const clientBalance = await PremierToken.balanceOf(client1.address);
       const totalSupply = await PremierToken.totalSupply();
 
       expect(clientBalance).to.equal(200);
       expect(totalSupply).to.equal(200);
     });
 
-    it('should allow minter to burn to client address', async () => {
+    it('should allow burner to burn from client address', async () => {
       const contractAsOwner = await createContract(owner);
       await contractAsOwner.addBurner(burner.address);
 
       const contractAsBurner = contractAsOwner.connect(owner);
-      await contractAsBurner.mintTo(client.address, 1000);
+      await contractAsBurner.mintTo(client1.address, 1000);
 
       contractAsOwner.connect(burner);
-      await contractAsBurner.burnFrom(client.address, 800);
+      await contractAsBurner.burnFrom(client1.address, 800);
 
-      const clientBalance = await contractAsBurner.balanceOf(client.address);
+      const clientBalance = await contractAsBurner.balanceOf(client1.address);
       const totalSupply = await contractAsBurner.totalSupply();
 
       expect(clientBalance).to.equal(200);
       expect(totalSupply).to.equal(200);
+    });
+  });
+
+  describe('Transfer', () => {
+    it('should not allow transfers when in paused state', async () => {
+      const contract = await createContract(owner);
+      await contract.mintTo(client1.address, 1000);
+      await contract.mintTo(client2.address, 1000);
+
+      const contractAsClient1 = contract.connect(client1);
+
+      await expect(contractAsClient1.transfer(client2.address, 500)).to.be
+        .reverted;
     });
   });
 });

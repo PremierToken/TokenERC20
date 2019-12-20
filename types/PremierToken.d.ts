@@ -48,6 +48,10 @@ interface PremierTokenInterface extends Interface {
 
     owner: TypedFunctionDescription<{encode([]: []): string}>;
 
+    pause: TypedFunctionDescription<{encode([]: []): string}>;
+
+    paused: TypedFunctionDescription<{encode([]: []): string}>;
+
     removeAdmin: TypedFunctionDescription<{
       encode([account]: [string]): string;
     }>;
@@ -63,6 +67,12 @@ interface PremierTokenInterface extends Interface {
     symbol: TypedFunctionDescription<{encode([]: []): string}>;
 
     totalSupply: TypedFunctionDescription<{encode([]: []): string}>;
+
+    transfer: TypedFunctionDescription<{
+      encode([_to, _value]: [string, BigNumberish]): string;
+    }>;
+
+    unpause: TypedFunctionDescription<{encode([]: []): string}>;
   };
 
   events: {
@@ -104,6 +114,20 @@ interface PremierTokenInterface extends Interface {
 
     MinterRemoved: TypedEventDescription<{
       encodeTopics([account]: [string | null]): string[];
+    }>;
+
+    Paused: TypedEventDescription<{encodeTopics([account]: [null]): string[]}>;
+
+    Transfer: TypedEventDescription<{
+      encodeTopics([from, to, value]: [
+        string | null,
+        string | null,
+        null
+      ]): string[];
+    }>;
+
+    Unpaused: TypedEventDescription<{
+      encodeTopics([account]: [null]): string[];
     }>;
   };
 }
@@ -174,6 +198,10 @@ export class PremierToken extends Contract {
 
     owner(): Promise<string>;
 
+    pause(overrides?: TransactionOverrides): Promise<ContractTransaction>;
+
+    paused(): Promise<boolean>;
+
     removeAdmin(
       account: string,
       overrides?: TransactionOverrides
@@ -192,6 +220,14 @@ export class PremierToken extends Contract {
     symbol(): Promise<string>;
 
     totalSupply(): Promise<BigNumber>;
+
+    transfer(
+      _to: string,
+      _value: BigNumberish,
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
+    unpause(overrides?: TransactionOverrides): Promise<ContractTransaction>;
   };
 
   addAdmin(
@@ -243,6 +279,10 @@ export class PremierToken extends Contract {
 
   owner(): Promise<string>;
 
+  pause(overrides?: TransactionOverrides): Promise<ContractTransaction>;
+
+  paused(): Promise<boolean>;
+
   removeAdmin(
     account: string,
     overrides?: TransactionOverrides
@@ -261,6 +301,14 @@ export class PremierToken extends Contract {
   symbol(): Promise<string>;
 
   totalSupply(): Promise<BigNumber>;
+
+  transfer(
+    _to: string,
+    _value: BigNumberish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  unpause(overrides?: TransactionOverrides): Promise<ContractTransaction>;
 
   filters: {
     AdminAdded(account: string | null): EventFilter;
@@ -286,6 +334,12 @@ export class PremierToken extends Contract {
     MinterAdded(account: string | null): EventFilter;
 
     MinterRemoved(account: string | null): EventFilter;
+
+    Paused(account: null): EventFilter;
+
+    Transfer(from: string | null, to: string | null, value: null): EventFilter;
+
+    Unpaused(account: null): EventFilter;
   };
 
   estimate: {
@@ -321,6 +375,10 @@ export class PremierToken extends Contract {
 
     owner(): Promise<BigNumber>;
 
+    pause(): Promise<BigNumber>;
+
+    paused(): Promise<BigNumber>;
+
     removeAdmin(account: string): Promise<BigNumber>;
 
     removeBurner(account: string): Promise<BigNumber>;
@@ -330,5 +388,9 @@ export class PremierToken extends Contract {
     symbol(): Promise<BigNumber>;
 
     totalSupply(): Promise<BigNumber>;
+
+    transfer(_to: string, _value: BigNumberish): Promise<BigNumber>;
+
+    unpause(): Promise<BigNumber>;
   };
 }
