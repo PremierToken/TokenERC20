@@ -31,11 +31,11 @@ contract AdminRole is Ownable {
     return _admins.bearers();
   }
 
-  function addAdmin(address account) public onlyOwner {
+  function addAdmin(address account) public onlyAdmin {
     _internalAddAdmin(account);
   }
 
-  function removeAdmin(address account) public onlyOwner {
+  function removeAdmin(address account) public onlyAdmin {
     _internalRemoveAdmin(account);
   }
 
@@ -45,6 +45,7 @@ contract AdminRole is Ownable {
   }
 
   function _internalRemoveAdmin(address account) internal {
+    require(account != msg.sender, "AdminRole: caller can not renounce itself");
     _admins.remove(account);
     emit AdminRemoved(account);
   }

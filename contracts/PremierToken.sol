@@ -5,8 +5,9 @@ import "./access/roles/AdminRole.sol";
 import "./access/roles/MinterRole.sol";
 import "./access/roles/BurnerRole.sol";
 import "./math/SafeMath.sol";
+import "./lifecycle/Pausable.sol";
 
-contract PremierToken is Ownable, AdminRole, MinterRole, BurnerRole {
+contract PremierToken is Ownable, Pausable, AdminRole, MinterRole, BurnerRole {
   using SafeMath for uint256;
 
   string private _name;
@@ -41,8 +42,26 @@ contract PremierToken is Ownable, AdminRole, MinterRole, BurnerRole {
     return _totalSupply;
   }
 
+  event Transfer(address indexed from, address indexed to, uint256 value);
+
   function balanceOf(address account) public view returns (uint256) {
     return _balances[account];
+  }
+
+  function transfer(address _to, uint256 _value)
+    public
+    whenNotPaused
+    returns (bool)
+  {
+    require(_to != address(0), "PremierToken: sending to the zero address");
+    require(
+      _value <= _balances[msg.sender],
+      "PremierToken: seding more than balance"
+    );
+    _balances[msg.sender] = _balances[msg.sender].sub(_value);
+    _balances[_to] = _balances[_to].add(_value);
+    emit Transfer(msg.sender, _to, _value);
+    return true;
   }
 
   function mintTo(address account, uint256 amount) public onlyMinter {
@@ -59,7 +78,10 @@ contract PremierToken is Ownable, AdminRole, MinterRole, BurnerRole {
       account != address(0),
       "PremierToken: burning from the zero address"
     );
-
+    require(
+      _balances[account] >= amount,
+      "PremierToken: burning more than available"
+    );
     _balances[account] = _balances[account].sub(amount);
     _totalSupply = _totalSupply.sub(amount);
 
