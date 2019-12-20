@@ -10,6 +10,7 @@ const {
 } = process.env;
 
 usePlugin('buidler-typechain');
+usePlugin('@nomiclabs/buidler-etherscan');
 
 require('./tasks/accounts');
 require('./tasks/deploy');

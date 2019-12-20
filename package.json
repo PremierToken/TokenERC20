@@ -11,13 +11,19 @@
     "build": "buidler compile",
     "postbuild": "buidler typechain",
     "deploy": "buidler deploy",
-    "lint": "solhint contracts/",
-    "test": "buidler test"
+    "fix:js": "eslint . --fix",
+    "fix": "yarn run fix:js",
+    "lint:sol": "solium --dir contracts/",
+    "lint:js": "eslint .",
+    "lint": "yarn run lint:sol && yarn run lint:js",
+    "test": "buidler test",
+    "verify-contract": "buidler verify-contract"
   },
   "dependencies": {},
   "devDependencies": {
     "@nomiclabs/buidler": "^1.0.1",
     "@nomiclabs/buidler-ethers": "^1.0.1",
+    "@nomiclabs/buidler-etherscan": "^1.0.2",
     "bignumber.js": "^9.0.0",
     "buidler-typechain": "^0.0.5",
     "chai": "^4.2.0",

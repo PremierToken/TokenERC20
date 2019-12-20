@@ -1,5 +1,5 @@
-const { task, usePlugin } = require('@nomiclabs/buidler/config');
-const { getWallets } = require('ethereum-waffle');
+const {task, usePlugin} = require('@nomiclabs/buidler/config');
+const {getWallets} = require('ethereum-waffle');
 
 usePlugin('@nomiclabs/buidler-ethers');
 
@@ -16,17 +16,17 @@ function showAccountInformation(label, format, accounts) {
 task(
   'accounts',
   'Prints the list of accounts',
-  async ({ addressesOnly, privateKeysOnly, silent }, { ethers }) => {
+  async ({addressesOnly, privateKeysOnly, silent}, {ethers}) => {
     const accounts = await getWallets(ethers.provider);
 
     if (!silent && !privateKeysOnly) {
-      showAccountInformation('Addresses', ({ address }) => address, accounts);
+      showAccountInformation('Addresses', ({address}) => address, accounts);
     }
 
     if (!silent && !addressesOnly) {
       showAccountInformation(
         'Private Keys',
-        ({ privateKey }) => privateKey,
+        ({privateKey}) => privateKey,
         accounts
       );
     }
